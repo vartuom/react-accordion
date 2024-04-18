@@ -1,31 +1,35 @@
 import { useLayoutEffect, useRef } from "react";
 
 export const Container = ({ children, isOpen }: any) => {
+  // формируем ссылку на DOM элемент с выпадающим контентом
   const ref = useRef<HTMLDivElement>(null!);
 
-  // useLayoutEffect runs before browser paint and allows for all this magic
+  // используем useLayoutEffect, он срабатывает ДО стадии 'paint' и позволяет провернуть этот трюк
   useLayoutEffect(() => {
     const element = ref.current;
 
     if (!element) return;
 
     if (isOpen) {
-      // get height of the wrapper before everything happens
-      const { height: oldHeight } = element.getBoundingClientRect();
+      // вытаскиваем высоту анимированного блока до начала анимации,
+      // можно выставить просто 0 если блок скрыт по умолчанию
+      // const {height: oldHeight} = element.getBoundingClientRect();
+      const oldHeight = 0;
 
-      // change the height to auto to make browser calculate
-      // get new calculated height
-      // change it back to old before the browser realises what you did (i.e. before it re-paints)
+      // пока браузер не начал рисовать страницу, накинем блоку height = "auto"
+      // браузер тут же посчитает его высоту и мы ее запомним (блок еще не нарисован на экране)
       element.style.height = "auto";
       const { height: newHeight } = element.getBoundingClientRect();
+      // как только мы узнали будущую высоту блока, сбрасываем ее обратно (в ноль если блок скрыт)
       element.style.height = `${oldHeight}px`;
 
-      // wait for next paint
-      // change height to the new value and watch the browser purr
+      // ждем до момента, пока браузер начнет рисовать страницу (до paint)
+      // и подсовываем ему высчитанную ранее высоту блока
       requestAnimationFrame(() => {
         element.style.height = `${newHeight}px`;
       });
     } else {
+      // если мы закрываем блок, то возвращаем ему oldHeight или просто скидываем в ноль
       element.style.height = `0px`;
     }
   }, [children, ref, isOpen]);
