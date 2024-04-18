@@ -26,7 +26,10 @@ export const Container = ({ children, isOpen }: any) => {
       // ждем до момента, пока браузер начнет рисовать страницу (до paint)
       // и подсовываем ему высчитанную ранее высоту блока
       requestAnimationFrame(() => {
-        element.style.height = `${newHeight}px`;
+        // вложенный раф нужен для того, что бы колбэк выполнился на следующем кадре (а не до конца текущего)
+        requestAnimationFrame(() => {
+          element.style.height = `${newHeight}px`;
+        });
       });
     } else {
       // если мы закрываем блок, то возвращаем ему oldHeight или просто скидываем в ноль
