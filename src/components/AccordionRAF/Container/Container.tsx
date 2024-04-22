@@ -41,7 +41,7 @@ export const Container = ({ children, isOpen }: any) => {
     <div
       ref={ref}
       style={{
-        transition: "height 200ms ease-in-out",
+        transition: "height 300ms ease-in-out",
         overflow: "hidden",
         background: "red",
       }}

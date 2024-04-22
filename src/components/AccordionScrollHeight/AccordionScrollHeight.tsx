@@ -3,7 +3,10 @@ import { useState } from "react";
 import { ICaptionWrapperProps } from "./types";
 import { Container } from "./Container/Container.tsx";
 
-export const Accordion = ({ children, title }: ICaptionWrapperProps) => {
+export const AccordionScrollHeight = ({
+  children,
+  title,
+}: ICaptionWrapperProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
